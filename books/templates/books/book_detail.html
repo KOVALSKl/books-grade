@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Books Listing</title>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}"/>
+</head>
+
+<body>
+    <main class="main">
+        <div class="cover-image">
+            <img src="{{ book.image.url }}"/>
+        </div>
+        <div class="book-content">
+            <h2 class="book-content__title">
+                {{ book.title }}
+            </h2>
+            <div class="book-content-main">
+                <ul class="book-content-main-list">
+                    <li class="book-content-main-list-item">
+                        <h3>Описание:</h3>
+                        <div>
+                            {{book.description}}
+                        </div>
+                    </li>
+                    <li class="book-content-main-list-item">
+                        <h3>Авторы:</h3>
+                        <div>
+                            {% for author in book.authors.all %}
+                                <a href="#">{{ author.name }} {{ author.surname }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="book-content-main-list-item">
+                        <h3>Краткое содержание:</h3>
+                        <div>
+                            {{book.summary}}
+                        </div>
+                    </li>
+                    <li class="book-content-main-list-item">
+                        <h3>Дата создания записи:</h3>
+                        <div>
+                            {{book.created_at|date:"d F Y"}}
+                        </div>
+                    </li>
+                </ul>
+                <a class="book-detail-link" href="/books/">
+                    Назад
+                </a>
+            </div>
+        </div>
+    </main>
+</body>

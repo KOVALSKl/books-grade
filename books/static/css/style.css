@@ -1,0 +1,98 @@
+* {
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* LISTING */
+main.main {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+main.main ul.last-added-books {
+    padding: 0;
+    margin: 0;
+}
+
+/* BOOK-ITEM */
+
+.book-item {
+    display: flex;
+    gap: 20px;
+
+    border: 1px solid gray;
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    width: fit-content;
+    max-width: 600px;
+    padding-right: 20px;
+}
+
+.book-item .cover-image {
+    max-width: 200px;
+
+    display: flex;
+}
+
+.book-item .cover-image img {
+    width: 100%;
+}
+
+.book-item .book-content {
+    padding: 20px 0;
+}
+
+.book-item .book-content,
+.book-content .book-content-main .book-content-main-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 20px;
+}
+
+.book-item .book-content .book-content__title,
+.book-content .book-content-main .book-content-main-list,
+.book-content .book-content-main .book-content-main-list h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.book-item .book-content .book-content__title {
+    font-size: 30px;
+}
+
+.book-content .book-content-main {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    height: 100%;
+    width: 100%;
+}
+
+.book-content .book-content-main .book-detail-link,
+.book-content .book-content-main .book-detail-link:link,
+.book-content .book-content-main .book-detail-link:active,
+.book-content .book-content-main .book-detail-link:visited {
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+
+    color: hsla(237, 91%, 34%, 0.85);
+    transition: color 300ms linear;
+}
+
+.book-content .book-content-main .book-detail-link:hover {
+    color: hsla(237, 91%, 34%, 0.5);
+}
+
+.book-content .book-content-main .book-content-main-list {
+    list-style-type: none;
+}

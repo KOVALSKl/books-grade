@@ -1,0 +1,31 @@
+<div class="book-item" id="book-item-{{book.id}}">
+    <div class="cover-image">
+        <img src="{{ book.image.url }}"/>
+    </div>
+    <div class="book-content">
+        <h2 class="book-content__title">
+            {{ book.title }}
+        </h2>
+        <div class="book-content-main">
+            <ul class="book-content-main-list">
+                <li class="book-content-main-list-item">
+                    <h3>Описание:</h3>
+                    <div>
+                        {{book.description}}
+                    </div>
+                </li>
+                <li class="book-content-main-list-item">
+                    <h3>Авторы:</h3>
+                    <div>
+                        {% for author in book.authors.all %}
+                            <a href="#">{{ author.name }} {{ author.surname }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+            <a class="book-detail-link" href="./{{book.id}}">
+                Подробнее
+            </a>
+        </div>
+    </div>
+</div>
