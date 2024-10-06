@@ -20,8 +20,10 @@ from django.conf import settings
 from django.urls import path, include, re_path
 from django.views.static import serve
 
+app_name = "home"
+
 urlpatterns = [
-    path('books/', include("books.urls")),
+    path('books/', include("books.urls"), name="books"),
     path('admin/', admin.site.urls),
 ]
 

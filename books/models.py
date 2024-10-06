@@ -1,12 +1,18 @@
+from django import forms
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-class CreatedAtMixin:
-    created_at = models.DateTimeField(auto_now_add=True)
+class CreatedAtMixin(models.Model):
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        abstract = True
 
 
-class Author(models.Model, CreatedAtMixin):
+class Author(CreatedAtMixin):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
 
@@ -17,7 +23,7 @@ class Author(models.Model, CreatedAtMixin):
         return f"{self.name} {self.surname}"
 
 
-class Genre(models.Model, CreatedAtMixin):
+class Genre(CreatedAtMixin):
     name = models.CharField(max_length=100)
 
     def __repr__(self):
@@ -27,10 +33,8 @@ class Genre(models.Model, CreatedAtMixin):
         return self.name
 
 
-class Book(models.Model, CreatedAtMixin):
+class Book(CreatedAtMixin):
     image = models.ImageField(
-        null=True,
-        blank=True,
         verbose_name="Изображение",
     )
     title = models.CharField(
@@ -46,8 +50,8 @@ class Book(models.Model, CreatedAtMixin):
         verbose_name="Краткое содержание",
     )
     rating = models.IntegerField(
-        default=0,
-        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
         verbose_name="Рейтинг"
     )
     authors = models.ManyToManyField(
@@ -67,3 +71,21 @@ class Book(models.Model, CreatedAtMixin):
     def __str__(self):
         return self.title
 
+
+class BookFiltersForm(forms.Form):
+    rating = forms.IntegerField(
+        max_value=5,
+        min_value=0,
+        required=False,
+        label="Рейтинг",
+    )
+    authors = forms.ModelMultipleChoiceField(
+        queryset=Author.objects.all(),
+        required=False,
+        label="Авторы",
+    )
+    genres = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        required=False,
+        label="Жанры",
+    )

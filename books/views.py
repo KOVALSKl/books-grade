@@ -1,27 +1,47 @@
-from django.db.models import DateTimeField
+import locale
+
 from django.http import HttpResponse
-from django.views.generic import TemplateView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, CreateView
 from django.shortcuts import get_object_or_404
 
-from books.models import Book
+from books.models import Book, BookFiltersForm
+from books.utils import FiltersToKwargs
+
+locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+
+
+class BookCreateView(CreateView):
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy("books:index")
 
 
 class BookListingView(TemplateView):
     template_name = 'books/book_listing.html'
     model = Book
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        form = BookFiltersForm(request.GET)
+
+        context["filters_form"] = form
+
+        if not form.is_valid():
+            return self.render_to_response(context)
+
+        with FiltersToKwargs(form.cleaned_data) as filters:
+            books = self.get_queryset(**filters)
+
+        context["books"] = books
+
+        return self.render_to_response(context)
+
+    def get_queryset(self, **kwargs):
+        if bool(kwargs):
+            return self.model.objects.filter(**kwargs)
+
         return self.model.objects.all()
-
-    def get_context_data(self, **kwargs):
-        books = self.get_queryset()
-        context = super().get_context_data(**kwargs)
-
-        context['books'] = books
-        context['authors'] = books.last().authors.all()
-
-        return context
-
 
 
 class BookDetailView(TemplateView):
@@ -35,7 +55,7 @@ class BookDetailView(TemplateView):
         book = get_object_or_404(self.model, pk=book_id)
 
         context['book'] = book
-        context['date_time'] = book.created_at.to_python()
+        context['created_at'] = book.created_at.strftime("%d %B %Y года")
 
         return context
 

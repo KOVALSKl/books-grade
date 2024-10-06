@@ -1,4 +1,15 @@
+{% load static %}
 <div class="book-item" id="book-item-{{book.id}}">
+    <div class="rating-value">
+        <img
+            src="{% static 'icons/yellow-star.svg' %}"
+            alt="rating star"
+            width="32"
+        />
+        <span>
+            {{book.rating}}
+        </span>
+    </div>
     <div class="cover-image">
         <img src="{{ book.image.url }}"/>
     </div>
@@ -18,12 +29,20 @@
                     <h3>Авторы:</h3>
                     <div>
                         {% for author in book.authors.all %}
-                            <a href="#">{{ author.name }} {{ author.surname }}</a>
+                            <a href="{% url 'books:index' %}?authors={{author.pk}}">{{ author.name }} {{ author.surname }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li class="book-content-main-list-item">
+                    <h3>Жанры:</h3>
+                    <div>
+                        {% for genre in book.genres.all %}
+                            <a href="{% url 'books:index' %}?genres={{genre.pk}}">{{ genre.name }}</a>
                         {% endfor %}
                     </div>
                 </li>
             </ul>
-            <a class="book-detail-link" href="./{{book.id}}">
+            <a class="action-link" href="./{{book.id}}">
                 Подробнее
             </a>
         </div>

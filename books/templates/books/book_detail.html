@@ -3,12 +3,12 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Books Listing</title>
+    <title>Ваши книги</title>
     <link rel="stylesheet" href="{% static 'css/style.css'%}"/>
 </head>
 
 <body>
-    <main class="main">
+    <main class="main detail">
         <div class="cover-image">
             <img src="{{ book.image.url }}"/>
         </div>
@@ -28,8 +28,33 @@
                         <h3>Авторы:</h3>
                         <div>
                             {% for author in book.authors.all %}
-                                <a href="#">{{ author.name }} {{ author.surname }}</a>
+                                <a href="{% url 'books:index' %}?authors={{ author.pk }}">
+                                    {{ author.name }} {{ author.surname }}
+                                </a>
                             {% endfor %}
+                        </div>
+                    </li>
+                    <li class="book-content-main-list-item">
+                        <h3>Жанры:</h3>
+                        <div>
+                            {% for genre in book.genres.all %}
+                                <a href="{% url 'books:index' %}?genres={{ genre.pk }}">
+                                    {{ genre.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="book-content-main-list-item">
+                        <h3>Рейтинг:</h3>
+                        <div class="rating-value">
+                            <img
+                                src="{% static 'icons/yellow-star.svg' %}"
+                                alt="rating star"
+                                width="32"
+                            />
+                            <span>
+                                {{book.rating}}
+                            </span>
                         </div>
                     </li>
                     <li class="book-content-main-list-item">
@@ -41,7 +66,7 @@
                     <li class="book-content-main-list-item">
                         <h3>Дата создания записи:</h3>
                         <div>
-                            {{book.created_at|date:"d F Y"}}
+                            {{created_at}}
                         </div>
                     </li>
                 </ul>
@@ -52,3 +77,5 @@
         </div>
     </main>
 </body>
+
+</html>
