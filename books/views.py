@@ -1,6 +1,7 @@
 import locale
+import logging
 
-from django.http import HttpResponse
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,7 @@ from books.models import Book, BookFiltersForm
 from books.utils import FiltersToKwargs
 
 locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+logger = logging.getLogger(__name__)
 
 
 class BookCreateView(CreateView):
@@ -28,6 +30,7 @@ class BookListingView(TemplateView):
         context["filters_form"] = form
 
         if not form.is_valid():
+            logger.warning(f"Переданная форма не валидна: {form}")
             return self.render_to_response(context)
 
         with FiltersToKwargs(form.cleaned_data) as filters:
@@ -52,7 +55,14 @@ class BookDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         book_id = kwargs.get('id', None)
-        book = get_object_or_404(self.model, pk=book_id)
+
+        try:
+            book = self.model.objects.get(pk=book_id)
+        except self.model.DoesNotExist:
+            logger.error(
+                f"Объекта типа {self.model} с ключом {book_id} не существует"
+            )
+            raise Http404("Объекта не существует")
 
         context['book'] = book
         context['created_at'] = book.created_at.strftime("%d %B %Y года")
