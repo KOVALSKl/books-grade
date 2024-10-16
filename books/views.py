@@ -1,15 +1,12 @@
-import locale
 import logging
 
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView
-from django.shortcuts import get_object_or_404
 
 from books.models import Book, BookFiltersForm
 from books.utils import FiltersToKwargs
 
-locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
 logger = logging.getLogger(__name__)
 
 
@@ -65,7 +62,7 @@ class BookDetailView(TemplateView):
             raise Http404("Объекта не существует")
 
         context['book'] = book
-        context['created_at'] = book.created_at.strftime("%d %B %Y года")
+        context['created_at'] = book.created_at
 
         return context
 
